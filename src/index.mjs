@@ -2,6 +2,8 @@ import { argv } from 'node:process';
 import { homedir } from 'node:os';
 import { sep } from 'node:path';
 
+import list from './list.mjs';
+
 const username = argv.find((el) => el.toString().startsWith('--')).split('=')[1];
 
 const homeDir = homedir();
@@ -18,14 +20,14 @@ const upDir = (path) => {
 }
 
 const changeDir = (path, dir) => {
-    dir 
-    return path.concat(separator, dir);
+    const res = dir.toString().replace(/\r\n|\r|\n/, '');
+    return path.concat(separator, res);
 }
 
 process.stdout.write(`Welcome to the File Manager, ${username}!\n`);
 process.stdout.write(`You are currently in ${homeDir}\n`);
 process.stdin.on('data', (chunc) => {
-    const [comand, ...params] = chunc.toString().split(' ');
+    const [comand, ...params] = chunc.toString().replace(/\r\n|\r|\n/, '').split(' ');
     process.stdout.write(params + '\n');
     switch (comand) {
         case 'up':
@@ -37,8 +39,8 @@ process.stdin.on('data', (chunc) => {
             process.stdout.write(`You are currently in ${currentDir}\n`);
             break;
         case 'ls':
-          
-          break;
+            list(currentDir);
+            break;
         case 'cat':
           
           break;
