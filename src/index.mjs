@@ -4,6 +4,7 @@ import { sep } from 'node:path';
 
 import list from './list.mjs';
 import cat from './cat.mjs';
+import add from './add.mjs';
 
 const username = argv.find((el) => el.toString().startsWith('--')).split('=')[1];
 
@@ -46,7 +47,7 @@ process.stdin.on('data', (chunc) => {
           cat(currentDir, params);
           break;
         case 'add':
-          
+          add(currentDir, params);
           break;
         case 'rn':
           
