@@ -3,6 +3,7 @@ import { homedir } from 'node:os';
 import { sep } from 'node:path';
 
 import list from './list.mjs';
+import cat from './cat.mjs';
 
 const username = argv.find((el) => el.toString().startsWith('--')).split('=')[1];
 
@@ -42,7 +43,7 @@ process.stdin.on('data', (chunc) => {
             list(currentDir);
             break;
         case 'cat':
-          
+          cat(currentDir, params);
           break;
         case 'add':
           
