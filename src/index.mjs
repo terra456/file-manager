@@ -5,6 +5,8 @@ import { sep } from 'node:path';
 import list from './list.mjs';
 import cat from './cat.mjs';
 import add from './add.mjs';
+import rn from './rename.mjs';
+import copy from './copy.mjs';
 
 const username = argv.find((el) => el.toString().startsWith('--')).split('=')[1];
 
@@ -50,10 +52,10 @@ process.stdin.on('data', (chunc) => {
           add(currentDir, params);
           break;
         case 'rn':
-          
+          rn(currentDir, params);
           break;
         case 'cp':
-          
+          copy(currentDir, params);
           break;
         case 'mv':
           
