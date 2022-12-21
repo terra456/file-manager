@@ -1,4 +1,5 @@
-import { createWriteStream, access, createReadStream } from 'node:fs/promises';
+import { access } from 'node:fs/promises';
+import { createReadStream, createWriteStream } from 'node:fs';
 import { constants } from 'node:fs';
 import { sep } from 'node:path';
 
