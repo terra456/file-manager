@@ -7,6 +7,8 @@ import cat from './cat.mjs';
 import add from './add.mjs';
 import rn from './rename.mjs';
 import copy from './copy.mjs';
+import move from './move.mjs';
+import delite from './delete.mjs';
 
 const username = argv.find((el) => el.toString().startsWith('--')).split('=')[1];
 
@@ -58,10 +60,10 @@ process.stdin.on('data', (chunc) => {
           copy(currentDir, params);
           break;
         case 'mv':
-          
+          move(currentDir, params);
           break;
         case 'rm':
-          
+          delite(currentDir, params);
           break;
         case 'os':
           
