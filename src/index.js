@@ -1,9 +1,7 @@
 import { homedir } from 'node:os';
-import { stdin, stdout } from 'node:process';
+import { stdin } from 'node:process';
 import { argv } from 'node:process';
-import path from 'path';
 import changeDir from './fs/changeDir.js';
-import { Buffer } from 'node:buffer';
 import osInfo from './os/index.js';
 import calculateHash from './hash/calcHash.js';
 import { create, list, remove, rename, copyFile } from './fs/index.js';
