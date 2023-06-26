@@ -28,6 +28,7 @@ const copyFile = async (dirName, [fileName, newPath], isRemoveSource = false) =>
       });
       writeStream.on('error', () => {
         console.log(`Could not create file ${distFile}`);
+        return;
       });
       readStream.pipe(writeStream);
       readStream.on('end', () => {

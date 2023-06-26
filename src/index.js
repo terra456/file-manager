@@ -8,6 +8,8 @@ import osInfo from './os/index.js';
 import calculateHash from './hash/calcHash.js';
 import { create, list, remove, rename, copyFile } from './fs/index.js';
 import read from './streams/read.js';
+import compress from './zip/compress.js';
+import decompress from './zip/decompress.js';
 
 let username;
 let homeDir = homedir();
@@ -48,19 +50,19 @@ stdin.on('data', async (data) => {
       break;
 
     case 'ls':
-      list(homeDir);
+      list(homeDir).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'cat':
-      read(homeDir, ...params);
+      read(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'add':
-      create(homeDir, ...params);
+      create(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'rn':
-      rename(homeDir, ...params);
+      rename(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'cp':
@@ -68,33 +70,30 @@ stdin.on('data', async (data) => {
       break;
 
     case 'mv':
-      copyFile(homeDir, params, true);
+      copyFile(homeDir, params, true).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'rm':
-      remove(homeDir, ...params);
+      remove(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'os':
-      osInfo(...params);
+      osInfo(...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
       
     case 'hash':
-      calculateHash(homeDir, ...params);
+      calculateHash(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'compress':
-      // compress path_to_file path_to_destination
-      // read(homeDir, ...params);
+      compress(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
   
     case 'decompress':
-      // decompress path_to_file path_to_destination
-      // read(homeDir, ...params);
+      decompress(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'exit':
-      // decompress path_to_file path_to_destination
       process.exit();
       break;
   
