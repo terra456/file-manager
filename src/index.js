@@ -1,12 +1,13 @@
 import { homedir } from 'node:os';
-import { stdin, stdout } from 'node:process';
+import { stdin } from 'node:process';
 import { argv } from 'node:process';
-import path from 'path';
-import changeDir from './serfe/changeDir.js';
-import { Buffer } from 'node:buffer';
-import list from './fs/list.js';
-import read from './fs/read.js';
+import changeDir from './fs/changeDir.js';
 import osInfo from './os/index.js';
+import calculateHash from './hash/calcHash.js';
+import { create, list, remove, rename, copyFile } from './fs/index.js';
+import read from './streams/read.js';
+import compress from './zip/compress.js';
+import decompress from './zip/decompress.js';
 
 let username;
 let homeDir = homedir();
@@ -18,11 +19,25 @@ argv.forEach((el, i) => {
 if (username) {
   console.log(`Welcome to the File Manager, ${username}!`);
 }
-console.log(`You are currently in ${homeDir}/`);
+console.log(`You are currently in ${homeDir}`);
 
 stdin.on('data', async (data) => {
-  const [comand, ...params] = data.toString().replace(/\r\n|\r|\n/, '').split(' ');
-  process.stdout.write(params + '\n');
+  let [comand, ...params] = data.toString().replace(/\r\n|\r|\n/, '').split(' ');
+  if (data.toString().includes("\'")) {
+    params = params.reduce((acc, el) => {
+      if (el.startsWith("\'") && el.endsWith("\'")) {
+        return acc.concat([el.replaceAll("\'", '')]);
+      } else if (el.startsWith("\'")) {
+        return acc.concat([el.replace("\'", '').concat(' ')]);
+      } else if (el.endsWith("\'")) {
+        acc[acc.length - 1] = acc[acc.length - 1].concat(el.replace("\'", ''));
+        return acc;
+      } else {
+        acc[acc.length - 1] = acc[acc.length - 1].concat(el + ' ');
+        return acc;
+      }
+    }, [])
+  }
   switch (comand) {
     case 'up':
       homeDir = await changeDir(homeDir, '..');
@@ -33,59 +48,61 @@ stdin.on('data', async (data) => {
       break;
 
     case 'ls':
-      list(homeDir);
+      list(homeDir).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'cat':
-      read(homeDir, ...params);
+      read(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'add':
-      // new_file_name
-      read(homeDir, ...params);
+      create(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'rn':
-      // path_to_file new_filename
-      read(homeDir, ...params);
+      rename(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'cp':
-      // cp path_to_file path_to_new_directory
-      read(homeDir, ...params);
+      copyFile(homeDir, params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'mv':
-      // mv path_to_file path_to_new_directory
-      read(homeDir, ...params);
+      copyFile(homeDir, params, true).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'rm':
-      // rm path_to_file
-      read(homeDir, ...params);
+      remove(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
       break;
 
     case 'os':
-      // rGet EOL (default system End-Of-Line) and print it to console
       osInfo(...params);
+      console.log(`You are currently in ${homeDir}`);
       break;
       
     case 'hash':
-      // hash path_to_file
-      read(homeDir, ...params);
+      calculateHash(homeDir, ...params);
+      console.log(`You are currently in ${homeDir}`);
       break;
 
     case 'compress':
-      // compress path_to_file path_to_destination
-      read(homeDir, ...params);
+      compress(homeDir, ...params);
       break;
   
     case 'decompress':
-      // decompress path_to_file path_to_destination
-      read(homeDir, ...params);
+      decompress(homeDir, ...params);
+      break;
+
+    case 'exit':
+      process.exit();
+      break;
+
+    case '.exit':
+      process.exit();
       break;
   
     default:
+      console.log('Invalid input');
       break;
   }
 });
