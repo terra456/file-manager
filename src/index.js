@@ -76,22 +76,28 @@ stdin.on('data', async (data) => {
       break;
 
     case 'os':
-      osInfo(...params).finally(() => console.log(`You are currently in ${homeDir}`));
+      osInfo(...params);
+      console.log(`You are currently in ${homeDir}`);
       break;
       
     case 'hash':
-      calculateHash(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
+      calculateHash(homeDir, ...params);
+      console.log(`You are currently in ${homeDir}`);
       break;
 
     case 'compress':
-      compress(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
+      compress(homeDir, ...params);
       break;
   
     case 'decompress':
-      decompress(homeDir, ...params).finally(() => console.log(`You are currently in ${homeDir}`));
+      decompress(homeDir, ...params);
       break;
 
     case 'exit':
+      process.exit();
+      break;
+
+    case '.exit':
       process.exit();
       break;
   

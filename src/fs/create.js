@@ -1,5 +1,5 @@
 import path from 'path';
-import { access, writeFile } from 'node:fs/promises';
+import { access, writeFile, constants } from 'node:fs/promises';
 
 const create = async (dirName, fileName) => {
     const pathToFile = path.resolve(dirName, fileName);
